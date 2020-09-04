@@ -17,7 +17,7 @@
 */
 
 import React from 'react';
-import { calCodeModifier, moduleCodeList, equipAttr, useI18n } from '../store';
+import { calCodeModifier, moduleCodeList, equipAttr } from '../store';
 import { I18n } from './I18n';
 import { ItemLink } from '.';
 
@@ -31,14 +31,13 @@ interface Props {
 export const ShipBonus: React.FC<Props> = ({ bonusCode, bonusSkill }) => {
   const modifier = calCodeModifier.code[bonusCode];
   const meta = calCodeModifier.meta[modifier.type_name];
-  const i18n = useI18n();
 
   return <div className={styles.bonus}>
     <h3>{ bonusSkill !== 0 ? <><ItemLink id={bonusSkill}/> (per level):</> : 'Role bonus:' }</h3>
     { modifier.attributes.map((v, i) => <div key={meta.attribute_ids[i]} className={styles.attribute}>
-    { meta.change_types[i] !== 'ship' && <I18n t={moduleCodeList[meta.change_ranges[i]]}/> }
-    {' '}{ i18n(equipAttr[meta.attribute_ids[i]].name) }
-    <strong>{ v > 0 && '+' }{ (v * 100).toFixed(2) }%</strong>
+      { meta.change_types[i] !== 'ship' && <I18n t={moduleCodeList[meta.change_ranges[i]]}/> }
+      {' '} <I18n t={equipAttr[meta.attribute_ids[i]].name}/>
+      <strong>{ v > 0 && '+' }{ (v * 100).toFixed(2) }%</strong>
     </div>) }
   </div>;
 };

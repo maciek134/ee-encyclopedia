@@ -18,11 +18,15 @@
 
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { ItemCard } from '../components';
+import { ItemCard, ExportCard } from '../components';
 
+import styles from './Item.module.css';
 
 export const ItemScreen: React.FC<{}> = () => {
   const { id } = useParams();
 
-  return <ItemCard id={id}/>;
+  return <main className={styles.main}>
+    <ItemCard id={id}/>
+    <ExportCard/>
+  </main>;
 };

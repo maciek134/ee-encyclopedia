@@ -41,6 +41,7 @@ export default function App() {
       <NavLink to="/items" activeClassName="active">Encyclopedia</NavLink>
       <NavLink to="/fit" activeClassName="active">Fitting (coming soon!)</NavLink>
       <NavLink to="/skills" activeClassName="active">Skill planning (coming soon!)</NavLink>
+      <NavLink to="/map" activeClassName="active">Map (coming soon!)</NavLink>
     </nav>
     <Switch>
       <Route path="/items" component={ItemsScreen}/>

@@ -25,6 +25,10 @@
   --color-border: var(--color-focus);
 }
 
+.ad {
+  max-height: 90px !important;
+}
+
 body, html {
   font-family: 'Lato', sans-serif;
   font-weight: 400;
@@ -101,6 +105,12 @@ input[type="checkbox"]:focus + label:before, input:focus {
 
 input[type="checkbox"]:checked + label:before {
   background: var(--color-focus);
+}
+
+@media (prefers-color-scheme: light) {
+  input[type="checkbox"] + label:before {
+    background: var(--color-primary);
+  }
 }
 
 @media (prefers-color-scheme: dark) {

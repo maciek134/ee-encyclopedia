@@ -1,0 +1,11 @@
+.industry h2 {
+  padding-right: 0 !important;
+}
+
+.industry h2 button {
+  background: none;
+  border: none;
+  text-decoration: underline;
+  float: right;
+  cursor: pointer;
+}

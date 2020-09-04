@@ -23,9 +23,10 @@ import { ItemScreen } from '.';
 import { useStore } from '../store';
 
 export const ItemsScreen: React.FC<{}> = () => {
-  const { fetchItems } = useStore();
+  const { fetchItems, fetchIndustry } = useStore();
   useEffect(() => {
     fetchItems();
+    fetchIndustry();
   }, [])
 
   return <>

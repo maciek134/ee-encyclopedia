@@ -1,0 +1,39 @@
+.card {
+  max-width: 500px;
+  margin-left: 1rem;
+  background: var(--color-shadow);
+  padding: 1rem;
+}
+
+.card h3 {
+  padding-bottom: 0.5rem;
+}
+
+.card section {
+  margin-top: 1rem;
+}
+
+.card section button {
+  margin-right: 0.5rem;
+}
+
+.item {
+  display: flex;
+}
+
+.item a {
+  flex: 1;
+  margin-right: 0.5rem;
+}
+
+.item button, .card h3 button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+  padding-right: 0;
+}
+
+.card h3 button {
+  float: right;
+}

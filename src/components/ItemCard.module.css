@@ -24,13 +24,18 @@
   margin-bottom: 0.25rem;
 }
 
-.card > h2 {
+.card h2 {
   border-left: 3px solid;
   margin-top: 0.25rem;
 }
 
-.card section h2, .card > h2, .card p, .slots, .card h1, .attributes.group {
+.card section h2, .card > h2, .card section h3, .card p, .slots, .card h1, .attributes.group {
   padding: 0 1rem;
+}
+
+.card section h3 {
+  margin-top: 0.6rem;
+  font-weight: bold;
 }
 
 .slots {
@@ -79,6 +84,7 @@
 }
 
 .attributes.group h2 {
+  border: none;
   text-align: left;
   font-weight: normal;
   font-size: 1em;

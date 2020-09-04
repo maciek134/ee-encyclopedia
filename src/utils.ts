@@ -17,6 +17,7 @@
 */
 
 import { Item, attributes, Attribute } from './store';
+import moment from 'moment';
 
 export interface AttributeWithValue extends Attribute {
   value: any;
@@ -152,8 +153,16 @@ interface ItemSkill extends Item {
   pre_skill: string[];
 }
 
+export interface ItemBlueprint extends Item {
+  product: number;
+}
+
 export function isSkill(item: Item): item is ItemSkill {
   return !item.attrs && !!item.exp && !!item.tech_lv;
+}
+
+export function isBlueprint(item: Item): item is ItemBlueprint {
+  return !!item.product;
 }
 
 export function isWeapon(attrs: PrettyAttributes): attrs is WeaponAttributes {
@@ -162,4 +171,15 @@ export function isWeapon(attrs: PrettyAttributes): attrs is WeaponAttributes {
 
 export function isShip(attrs: PrettyAttributes): attrs is ShipAttributes {
   return attrs.shipSize?.value >= 0;
+}
+
+const padTime = (n: number): string => n.toString().padStart(2, '0');
+
+export function formatDuration(duration: moment.Duration): string {
+  const d = duration.get('d');
+  const h = duration.get('h');
+  const m = duration.get('m');
+  const s = duration.get('s');
+
+  return `${d}:${padTime(h)}:${padTime(m)}:${padTime(s)}`;
 }

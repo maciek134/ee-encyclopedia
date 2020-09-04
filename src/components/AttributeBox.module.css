@@ -1,0 +1,21 @@
+.attributeBox {
+  display: flex;
+  padding: 0.25rem;
+}
+
+.attributeBox:nth-child(2n) {
+  background: var(--color-shadow);
+}
+
+.attributeBox span {
+  display: block;
+  flex: 1;
+}
+
+.attributeBox strong, .attributeBox img {
+  align-self: center;
+}
+
+.attributeBox strong {
+  text-align: right;
+}

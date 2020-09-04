@@ -22,9 +22,11 @@
   },
   "dependencies": {
     "mathjs": "^7.2.0",
+    "moment": "^2.27.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
+    "xlsx": "^0.16.6",
     "zustand": "^3.0.2"
   },
   "staticFiles": {

@@ -1,3 +1,11 @@
+declare module '*.module.css' {
+  interface CSSModule {
+    [k: string]: string;
+  }
+  const css: CSSModule;
+  export default css;
+}
+
 /*
   EE Encyclopedia
   Copyright (C) 2020 Maciej Sopyło
@@ -15,11 +23,3 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-
-declare module '*.module.css' {
-  interface CSSModule {
-    [k: string]: string;
-  }
-  const css: CSSModule;
-  export default css;
-}

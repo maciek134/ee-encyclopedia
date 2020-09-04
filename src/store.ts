@@ -16,7 +16,7 @@
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import create from 'zustand';
+import create, { SetState } from 'zustand';
 
 import _itemsIndex from '../data/items.index.json';
 import _groups from '../data/groups.json';
@@ -58,6 +58,7 @@ export interface Item {
   init_lv?: number;
   tech_lv?: number;
   pre_skill?: string[];
+  product?: number;
 }
 
 export interface Items {
@@ -136,43 +137,92 @@ interface EquipAttrs {
   [k: string]: EquipAttr;
 }
 
+export interface ManufatureData {
+  blueprint: number;
+  money: number;
+  material: { [k: number]: number };
+  skill_level: number;
+  material_amend_att: number;
+  planetary_material_num?: number[];
+  output_num: number;
+  name: string;
+  minerals_species: number[];
+  component_num?: number[];
+  component_species?: number[];
+  planetary_material_species: number[];
+  time_amend_att: number;
+  time: number;
+  minerals_num: number[];
+  product_type_id: number;
+}
+
+export interface IndustryData {
+  manufacture: {
+    [k: number]: ManufatureData;
+  };
+  item_manufacturing: {
+    [k: number]: ManufatureData;
+  };
+  reverse_engineering: {
+    [k: number]: never; // TODO
+  };
+  item_reverse_engineering: {
+    [k: number]: never; // TODO
+  };
+  // TODO: these look like they are not needed, but may be?
+  manufacture_hier: never;
+  reverse_engineering_hier: never;
+}
+
+async function fetchData<T>(filename: string, set: SetState<any>): Promise<T> {
+  set(state => ({ loading: state.loading + 1 }));
+  const res = await fetch(`${process.env.NODE_ENV === 'development' ? '/' : document.baseURI}${filename}.json`);
+  set(state => ({ loading: state.loading - 1 }));
+  return res.json();
+}
+
 const spRate = localStorage.getItem('sprate')
 export const useStore = create(set => ({
   lang: 'en',
   i18n: {},
   items: null,
+  industry: null,
+  exportBlueprints: [],
   loading: 0,
   spRate: spRate ? parseInt(spRate) : 30,
 
   /* actions */
-  setLang: async (lang: string) => {
-    set(state => ({ loading: state.loading + 1 }));
-    const res = await fetch(`${document.baseURI}/${lang}.json`);
-    const data = await res.json();
-    set(state => ({ lang, i18n: { [lang]: data }, loading: state.loading - 1 }));
-  },
   fetchItems: async () => {
-    set(state => ({ loading: state.loading + 1 }));
-    const res = await fetch(`${document.baseURI}/items.json`);
-    const items = await res.json() as Items;
-    set(state => ({ items, loading: state.loading - 1 }));
+    const items = await fetchData<Items>('items', set);
+    set(() => ({ items }));
+  },
+  fetchIndustry: async () => {
+    const industry = await fetchData<IndustryData>('industry', set);
+    set(() => ({ industry }));
+  },
+
+  setLang: async (lang: string) => {
+    const data = await fetchData<I18nObject>(lang, set);
+    set(() => ({ lang, i18n: { [lang]: data } }));
   },
   setSPRate: (spRate: number) => {
     localStorage.setItem('sprate', spRate.toString());
     set(() => ({ spRate }));
-  }
+  },
+  addBlueprintExport: (id: string | number) => set(state => (state.exportBlueprints.includes(id) ? {}: { exportBlueprints: [ ...state.exportBlueprints, id ] })),
+  removeBlueprintExport: (index: number) => set(state => {
+    const exportBlueprints = [ ...state.exportBlueprints ];
+    exportBlueprints.splice(index, 1);
+    return { exportBlueprints };
+  }),
+  clearBlueprintExport: () => set(() => ({ exportBlueprints: [] })),
 }));
 
 export const useI18n = () => {
   const i18n = useStore(useCallback(state => state?.i18n[state.lang], []));
 
-  return (key: string | number) => i18n[key];
+  return (key: string | number) => i18n?.[key];
 };
-
-interface WithDefault<T> {
-  default: T;
-}
-type Imported<T> = Promise<WithDefault<T>>;
 
 export const itemsIndex = _itemsIndex as ItemsIndex;
 export const groups = _groups as Groups;

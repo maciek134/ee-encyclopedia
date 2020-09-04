@@ -25,5 +25,5 @@ interface Props {
 
 export const I18n: React.FC<Props> = ({ t }) => {
   const i18n = useI18n();
-  return i18n(t) || t;
+  return i18n(t) ?? t ?? 'undefined';
 }

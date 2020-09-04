@@ -17,14 +17,15 @@
 */
 
 import React, { useCallback } from 'react';
-import { useStore } from '../store';
-import { I18n } from './I18n';
-import { getPrettyAttributes, isWeapon, isShip, isSkill } from '../utils';
+import { evaluate } from 'mathjs';
+
+import { useStore, calCodeModifier, moduleCodeList, equipAttr } from '../store';
+import { I18n, ShipBonus, ItemLink, ItemCardIndustry, AttributeBox } from '.';
+import { getPrettyAttributes, isWeapon, isShip, isSkill, isBlueprint, formatDuration } from '../utils';
 import { ShowAttribute, Icon } from '.';
 
 import styles from './ItemCard.module.css';
-import { ShipBonus } from './ShipBonus';
-import { ItemLink } from './ItemLink';
+import moment from 'moment';
 
 interface Props {
   id: string | number;
@@ -33,10 +34,11 @@ interface Props {
 const SP_NEEDED = [250, 1415, 8000, 45255, 256000];
 
 export const ItemCard: React.FC<Props> = ({ id, children }) => {
-  const [ item, spRate, setSPRate ] = useStore(useCallback(state => [
+  const [ item, spRate, setSPRate, industry ] = useStore(useCallback(state => [
     state.items?.[id],
     state.spRate,
     state.setSPRate,
+    state.industry?.item_manufacturing?.[id],
   ], [ id ]));
 
   if (!item) {
@@ -62,44 +64,63 @@ export const ItemCard: React.FC<Props> = ({ id, children }) => {
 
     { isSkill(item) && <>
       <section className={styles.attributes}>
-        <ShowAttribute name="techLevel" label="Tech Level" value={item.tech_lv}/>
-        <ShowAttribute name="initLevel" label="Starting Level" value={item.init_lv > 0 ? item.init_lv : undefined }/>
-        { item.pre_skill && <ShowAttribute name="requiredSkills" label="Required Skills" value={item.pre_skill.map((v, i) => {
+        <AttributeBox label="Tech Level">{ item.tech_lv }</AttributeBox>
+        { item.init_lv > -1 && <AttributeBox label="Starting Level">{ item.init_lv }</AttributeBox> }
+        { item.pre_skill && <AttributeBox label="Required Skills">{item.pre_skill.map((v, i) => {
           const [ id, level ] = v.split('|');
           return <React.Fragment key={id}>
             <ItemLink key={v} id={id}/> lvl. {level}
             { i < item.pre_skill.length - 1 && <br/> }
           </React.Fragment>;
-        })}/> }
-        <ShowAttribute name="spNeeded" label="SP needed*" value={<table>
-          <tbody>
-            {SP_NEEDED.map((sp, i) => {
-              if (i < item.init_lv) {
+        })}</AttributeBox> }
+        <AttributeBox label="SP needed*">
+          <table>
+            <tbody>
+              {SP_NEEDED.map((sp, i) => {
+                if (i < item.init_lv) {
+                  return null;
+                }
+                const value = Math.round(item.exp * sp / 1000);
+                const valueRate = Math.round(value * 60 / spRate);
+                return <tr key={sp}>
+                  <td>lvl. {i + 1}</td>
+                  <td>
+                  { value }
+                  </td>
+                  <td>{ formatDuration(moment.duration(valueRate, 's')) }</td>
+                </tr>
+              })}
+            </tbody>
+          </table>
+        </AttributeBox>
+      </section>
+      <section className={styles.attributes}>
+        <h2>Effects:</h2>
+        { SP_NEEDED.map((v, level) => {
+          const modifier = calCodeModifier.code[item.main_cal_code.replace('%d', (level + 1).toString())];
+          const meta = calCodeModifier.meta[modifier?.type_name];
+
+          return <>
+            <h3>Level {level + 1}:</h3>
+            { modifier?.attributes.map((v, i) => {
+              if (v === null) {
                 return null;
               }
-              const value = Math.round(item.exp * sp / 1000);
-              const valueRate = Math.round(value * 60 / spRate);
-              const sec = valueRate % 60;
-              const min = Math.round(valueRate / 60) % 60;
-              const hours = Math.round(valueRate / 60 / 60) % 24;
-              const days = Math.round(valueRate / 60 / 60 / 24);
-              return <tr key={sp}>
-                <td>lvl. {i + 1}</td>
-                <td>
-                { value }
-                </td>
-                <td>
-                  {days.toString()}:
-                  {hours.toString().padStart(2, '0')}:
-                  {min.toString().padStart(2, '0')}:
-                  {sec.toString().padStart(2, '0')}
-                </td>
-              </tr>
-            })}
-          </tbody>
-        </table>}/>
+              const attrExtra = equipAttr[meta.attribute_ids[i]];
+              const value = attrExtra.formula ? evaluate(attrExtra.formula, { A: v }).toFixed(2) : v;
+              return <AttributeBox key={meta.attribute_ids[i]} label={<>
+                { meta.change_types[i] !== 'character' && <I18n t={moduleCodeList[meta.change_ranges[i]]}/> }
+                {' '} <I18n t={attrExtra.name}/>
+              </>}>
+                { value > 0 && '+' }{ value } { attrExtra.unit && attrExtra.unit !== 'NOT_FOUND' && <I18n t={attrExtra.unit}/> }
+              </AttributeBox>
+            }) }
+          </>;
+        }) }
       </section>
     </>}
+
+    { isBlueprint(item) && <ItemCardIndustry id={id} item={item}/> }
 
     { isShip(attrs) && <>
       <section className={styles.slots}>
@@ -136,6 +157,7 @@ export const ItemCard: React.FC<Props> = ({ id, children }) => {
       <ShowAttribute name="durationDModMod"/>
       <ShowAttribute name="maxGroupFitted" label="Per Ship Limit"/>
       <ShowAttribute name="disallowInEmpireSpace" label="Null-sec Only" fn={v => v ? 'yes' : 'no'}/>
+      { industry && <AttributeBox label="Blueprint"><ItemLink id={industry.blueprint}/></AttributeBox> }
     </section>
 
     { isWeapon(attrs) && <>
@@ -148,6 +170,7 @@ export const ItemCard: React.FC<Props> = ({ id, children }) => {
       </section>
       <span style={{fontStyle: 'italic', fontSize: '0.9em', padding: '0 1rem'}}>Pay no attention to the bars for now, I have no idea how they work in-game</span>
       <section className={styles.attributes}>
+        <h2>Weapon Stats:</h2>
         <ShowAttribute name="power"/>
         <ShowAttribute name="maxRange" fn={v => (v / 1000).toFixed(1)}/>
         <ShowAttribute name="falloff" fn={v => (v / 1000).toFixed(1)}/>
@@ -162,6 +185,7 @@ export const ItemCard: React.FC<Props> = ({ id, children }) => {
 
     { isShip(attrs) && <>
       <section className={styles.attributes}>
+        <h2>Ship Stats:</h2>
         <ShowAttribute name="is_rookie_insurance" label="Insurance cost" value={item.is_rookie_insurance}/>
         
         <ShowAttribute name="maxVelocity"/>
@@ -198,9 +222,10 @@ export const ItemCard: React.FC<Props> = ({ id, children }) => {
       </section>
     </> }
 
+    <h2>Description</h2>
     <p><I18n t={item.description}/></p>
 
-    { isSkill(item) && <p>
+    { isSkill(item) && <div style={{ padding: '0 1rem' }}>
       * skill times calculated at { spRate }/min
       <nav className={styles.sprate}>
         <button className={spRate === 30 ? styles.active : undefined} onClick={() => setSPRate(30)}>30</button>{' | '}
@@ -209,7 +234,7 @@ export const ItemCard: React.FC<Props> = ({ id, children }) => {
         <button className={spRate === 70 ? styles.active : undefined} onClick={() => setSPRate(70)}>70</button>{' | '}
         <button className={spRate === 75 ? styles.active : undefined} onClick={() => setSPRate(75)}>75</button>
       </nav>
-    </p> }
+    </div> }
 
     {/* <hr/>
     <details>
