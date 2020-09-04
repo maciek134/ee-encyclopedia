@@ -1,0 +1,111 @@
+/*
+  EE Encyclopedia
+  Copyright (C) 2020 Maciej Sopyło
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
+.card {
+  max-width: 500px;
+}
+
+.card h1 {
+  margin-bottom: 0.25rem;
+}
+
+.card > h2 {
+  border-left: 3px solid;
+  margin-top: 0.25rem;
+}
+
+.card section h2, .card > h2, .card p, .slots, .card h1, .attributes.group {
+  padding: 0 1rem;
+}
+
+.slots {
+  display: flex;
+  margin-bottom: 1rem;
+  white-space: nowrap;
+  overflow-y: auto;
+}
+
+.slots div {
+  width: 2.5rem;
+  background: var(--color-shadow) !important;
+  padding: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+.slots div strong {
+  font-weight: normal;
+}
+
+.slots div img {
+  filter: invert(1);
+}
+
+.attributes > div {
+  margin: 0.25rem 0;
+  padding: 0.25rem 1rem;
+}
+
+.attributes table tr td {
+  font-weight: normal;
+  padding: 0 0.25rem;
+}
+.attributes table tr td:nth-of-type(2) {
+  font-weight: bold;
+}
+
+.attributes.group {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  column-gap: 0.5rem;
+}
+
+.attributes.group div {
+  grid-area: unset !important;
+}
+
+.attributes.group h2 {
+  text-align: left;
+  font-weight: normal;
+  font-size: 1em;
+  margin: 0;
+  padding: 0;
+  grid-area: 1 / 1 / 1 / 5;
+}
+
+.attributes.group div strong {
+  font-weight: normal;
+  text-align: right;
+}
+
+.sprate button {
+  background: none;
+  border: none;
+  text-decoration: underline;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.sprate button.active {
+  font-weight: bold;
+}
+
+@media (max-width: 480px) {
+  details, hr {
+    display: none;
+  }
+}

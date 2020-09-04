@@ -1,0 +1,69 @@
+/*
+  EE Encyclopedia
+  Copyright (C) 2020 Maciej Sopyło
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
+.attribute {
+  display: flex;
+  padding: 0.25rem;
+}
+
+.attribute:nth-child(2n) {
+  background: var(--color-shadow);
+}
+
+.attribute span {
+  display: block;
+  flex: 1;
+}
+
+.attribute strong, .attribute img {
+  align-self: center;
+}
+
+.attribute strong {
+  text-align: right;
+}
+
+.bar {
+  --color: black;
+  padding: 0 !important;
+  display: grid;
+  grid-template:
+    "label value" auto
+    "progress progress" auto / 1.5rem auto;
+}
+
+.bar span {
+  grid-area: label;
+  color: var(--color);
+}
+
+.bar strong {
+  grid-area: value;
+}
+
+.bar meter {
+  grid-area: progress;
+  height: 5px;
+  -moz-appearance: none;
+  appearance: none;
+  background: #ddd;
+}
+
+.bar meter::-moz-meter-bar, .bar meter::-webkit-meter-bar {
+  background: var(--color);
+}

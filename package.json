@@ -1,0 +1,32 @@
+{
+  "name": "ee-item-viewer",
+  "version": "1.0.0",
+  "license": "GPL-3.0-or-later",
+  "scripts": {
+    "start": "parcel serve ./src/index.html",
+    "build": "parcel build --public-url ./ ./src/index.html ./src/404.html && cp ./data/*.json ./dist"
+  },
+  "devDependencies": {
+    "@parcel/transformer-css": "^2.0.0-alpha.3",
+    "@parcel/transformer-html": "^2.0.0-alpha.3",
+    "@parcel/transformer-postcss": "^2.0.0-alpha.3",
+    "@parcel/transformer-posthtml": "^2.0.0-alpha.3",
+    "@types/mathjs": "^6.0.5",
+    "@types/react": "^16.9.48",
+    "@types/react-router-dom": "^5.1.5",
+    "parcel": "^2.0.0-beta.1",
+    "postcss-modules": "^3.2.2",
+    "sass": "^1.26.10"
+  },
+  "dependencies": {
+    "mathjs": "^7.2.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-router-dom": "^5.2.0",
+    "zustand": "^3.0.2"
+  },
+  "staticFiles": {
+    "staticPath": "data",
+    "watcherGlob": "**"
+  }
+}

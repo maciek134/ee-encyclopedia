@@ -1,0 +1,114 @@
+/*
+  EE Encyclopedia
+  Copyright (C) 2020 Maciej Sopyło
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
+:root {
+  --color-primary: #34b1eb;
+  --color-focus: rgba(0, 0, 0, 0.12);
+  --color-shadow: rgba(0, 0, 0, 0.05);
+  --color-text: #000;
+  --color-bg: #eee;
+  --color-border: var(--color-focus);
+}
+
+body, html {
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  margin: 0;
+  padding: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+input[type="text"] {
+  background: var(--color-shadow);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+}
+
+a::before {
+  content: '↪ ';
+}
+
+a {
+  color: var(--color-text);
+}
+
+strong {
+  font-weight: 700;
+}
+
+h2, h3 {
+  font-weight: normal;
+  margin: 0;
+}
+
+h2 {
+  font-size: 1.1em;
+}
+
+h3 {
+  font-size: 1.05em;
+}
+
+input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+}
+
+input[type="checkbox"] + label {
+  position: relative;
+  top: 0.5rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+footer {
+  margin: 2rem 0;
+  padding: 0 1rem;
+  text-align: center;
+}
+
+input[type="checkbox"] + label:before {
+  content: '';
+  margin-right: 10px;
+  display: inline-block;
+  vertical-align: text-top;
+  border: 1px solid var(--color-border);
+  width: 20px;
+  height: 20px;
+  background: var(--color-shadow);
+}
+
+input[type="checkbox"]:focus + label:before, input:focus {
+  box-shadow: 0 0 0 3px var(--color-focus);
+  outline: none;
+}
+
+input[type="checkbox"]:checked + label:before {
+  background: var(--color-focus);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-focus: rgba(255, 255, 255, 0.5);
+    --color-shadow: rgba(255, 255, 255, 0.1);
+    --color-text: #eee;
+    --color-bg: #000;
+    --color-border: transparent;
+  }
+}

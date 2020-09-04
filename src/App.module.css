@@ -1,0 +1,62 @@
+/*
+  EE Encyclopedia
+  Copyright (C) 2020 Maciej Sopyło
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
+.nav {
+  padding: 0.5rem 1rem;
+  overflow-y: auto;
+  white-space: nowrap;
+}
+
+.nav a {
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  display: inline-block;
+}
+
+.nav a::before {
+  content: '';
+}
+
+.nav a:first-of-type {
+  padding-left: 0;
+}
+
+.nav a:last-of-type {
+  padding-right: 0;
+}
+
+.nav :global(a.active) {
+  text-decoration: underline;
+}
+
+.loading {
+  position: fixed;
+  z-index: 999999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--color-bg);
+  display: flex;
+}
+
+.loading div {
+  flex: 1;
+  align-self: center;
+  text-align: center;
+}
